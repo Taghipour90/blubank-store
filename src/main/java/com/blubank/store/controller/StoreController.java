@@ -60,12 +60,12 @@ public class StoreController {
 
     @PostMapping("/cart/{productId}")
     public void addProductToCart(@PathVariable Long productId) {
-        Product product = productRepository.getById(productId);
-        if(product.getId() == null) {
-            throw new ProductNotFoundException("product not found for user admin");
-        }
         User user = getUser();
         Cart cart = cartRepository.getByUser(user);
+        Product product = productRepository.getById(productId);
+        if(product.getId() == null) {
+            throw new ProductNotFoundException("user: " + user.getUsername() + " exception: product not found for user admin");
+        }
         cart.getProducts().add(product);
         logger.info("add product: " + product.getTitle() + " to user: " + user.getUsername() + " cart");
         cartRepository.save(cart);
@@ -92,7 +92,7 @@ public class StoreController {
         Order order = new Order();
         List<Product> products = cart.getProducts();
         if (products.isEmpty()) {
-            throw new ProductNotFoundException("product not found for user admin");
+            throw new ProductNotFoundException("user: " + user.getUsername() + " exception: product not found for user admin");
         }
         order.getProducts().addAll(products);
         order.setUser(user);
@@ -128,7 +128,7 @@ public class StoreController {
         Cart cart = cartRepository.getByUser(user);
         Product product = productRepository.getById(productId);
         if(product.getId() == null) {
-            throw new ProductNotFoundException("product not found for user admin");
+            throw new ProductNotFoundException("user: " + user.getUsername() + " exception: product not found for user admin");
         }
         cart.getProducts().remove(product);
         logger.info("remove product: " + product.getTitle() + " from user: " + user.getUsername() + " cart");

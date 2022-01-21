@@ -39,7 +39,7 @@ public class OrderService {
         }
         Order order=orderRepository.getByUserAndStatus(user,"paying").get(0);
         if(order == null) {
-            throw new OrderNotFoundException("order not found for user: admin");
+            throw new OrderNotFoundException("user: " + user.getUsername() + " exception: order not found for user: admin");
         }
         order.setStatus("paid");
         logger.info("order paid");
